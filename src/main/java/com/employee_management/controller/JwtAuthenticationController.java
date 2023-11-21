@@ -45,7 +45,9 @@ public class JwtAuthenticationController {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtAuthRequest.getUsername(),jwtAuthRequest.getPassword()));
 			
 		} catch (BadCredentialsException e) {
-			return new ResponseEntity<JwtAuthResponse>(new JwtAuthResponse("",""),HttpStatus.UNAUTHORIZED);
+
+			return new ResponseEntity<JwtAuthResponse>(new JwtAuthResponse("Invalid username or password",""),HttpStatus.UNAUTHORIZED);
+
 		
 		}
 		
@@ -53,6 +55,7 @@ public class JwtAuthenticationController {
 		
 		String jwt=jwtTokenHelper.generateToken(userDetails);
 		String role=userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+
 		return new ResponseEntity<JwtAuthResponse>(new JwtAuthResponse(jwt,role),HttpStatus.CREATED);
 	}
 	
